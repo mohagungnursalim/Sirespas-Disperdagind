@@ -63,7 +63,11 @@
                         <div class="row">
                             <div class="col-lg-6 d-none d-lg-block text-center mt-5 ">
                                 <img src="{{ asset('img/kotapalu.png') }}" width="130px" alt="">
-                                <h1 class="h4 text-dark">Dinas Perdagangan dan Perindustrian Kota Palu</h1>
+                                <h1 class="h4 text-dark">
+                                    @foreach ($settings as $setting )
+                                    {{ $setting->nama }}
+                                    @endforeach |
+                                    Dinas Perdagangan dan Perindustrian Kota Palu</h1>
                             </div>
 
                             <div class="col-lg-6">

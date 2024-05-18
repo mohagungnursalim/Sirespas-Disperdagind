@@ -1,30 +1,3 @@
-{{-- <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-    </div>
-
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout> --}}
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -66,7 +39,11 @@
                         <div class="row">
                             <div class="col-lg-6 d-none d-lg-block text-center mt-5 ">
                                 <img src="{{ asset('img/kotapalu.png') }}" width="130px" alt="">
-                                <h1 class="h4 text-dark">Dinas Perdagangan dan Perindustrian Kota Palu</h1>
+                                <h1 class="h4 text-dark">
+                                    @foreach ($settings as $setting )
+                                    {{ $setting->nama }}
+                                    @endforeach |
+                                    Dinas Perdagangan dan Perindustrian Kota Palu</h1>
                             </div>
                             
                             <div class="col-lg-6">
