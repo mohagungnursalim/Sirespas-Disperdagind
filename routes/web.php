@@ -2,20 +2,10 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ApiController;
-use App\Http\Controllers\FrontendController;
-use App\Http\Controllers\PanganController;
-use App\Http\Controllers\AduanController;
-use App\Http\Controllers\BarangController;
 use App\Http\Controllers\PasarController;
-use App\Http\Controllers\SatuanController;
-use App\Http\Controllers\KomoditasController;
 use App\Http\Controllers\RetribusiController;
-use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
-use App\Models\Retribusi;
-use App\Models\Setting;
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
