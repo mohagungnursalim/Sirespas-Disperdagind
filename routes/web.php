@@ -5,6 +5,7 @@ use App\Http\Controllers\ApiController;
 use App\Http\Controllers\PasarController;
 use App\Http\Controllers\RetribusiController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 // _________________Login Views_______________
 Route::redirect('/', '/login');
-
+Route::get('/dashboard', [DashboardController::class,'index'])->middleware('auth');
 
 
 // ________________Dashboard admin & Operator__________________

@@ -26,7 +26,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                             Jenis Barang</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $barang }}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-solid fa-pepper-hot fa-2x text-gray-300"></i>
@@ -45,7 +45,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                             Harga Barang Di Input</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $pangan }}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-chart-bar fa-2x text-gray-300"></i>
@@ -63,7 +63,7 @@
                 <div class="col mr-2">
                     <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                         Satuan</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $satuan }}</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
                 </div>
                 <div class="col-auto">
                     <i class="fas fa-balance-scale fa-2x text-gray-300"></i>
@@ -80,7 +80,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                             Komoditas</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $komoditas }}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-database fa-2x text-gray-300"></i>
@@ -102,9 +102,9 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col-auto">
                                 <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">
-                                    @if (Auth::user()->is_admin == true)
+                                    {{-- @if (Auth::user()->is_admin == true)
                                     {{ $user }}
-                                    @endif
+                                    @endif --}}
                                 </div>
                             </div>
                             
@@ -130,7 +130,7 @@
                         </div>
                         <div class="row no-gutters align-items-center">
                             <div class="col-auto">
-                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ $pasar }}</div>
+                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"></div>
                             </div>
                             
                         </div>
@@ -153,7 +153,7 @@
                         </div>
                         <div class="row no-gutters align-items-center">
                             <div class="col-auto">
-                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ $aduan }}</div>
+                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"></div>
                             </div>
                             
                         </div>
@@ -191,7 +191,7 @@
 
 
 {{-- pie chart --}}
-@if (Auth::user()->is_admin == true)
+{{-- @if (Auth::user()->is_admin == true)
 <script type="text/javascript">
     google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(drawChart);
@@ -267,7 +267,7 @@
       chart.draw(data, options);
     }
   </script>
-@endif
+@endif --}}
 
 
 
