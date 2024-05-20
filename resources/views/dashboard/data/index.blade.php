@@ -7,7 +7,9 @@ Retribusi
 @section('container')
 
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 
@@ -15,6 +17,16 @@ Retribusi
     <div class="card-body">
 
         <div class="container">
+
+            @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Sukses!</strong> {{ session('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @endif
+
             @if (auth()->user()->operator == 'hanyalihat')
 
             @else
@@ -164,7 +176,7 @@ Retribusi
 
                             <div class="form-group">
                                 <label for="">Nama Pedagang</label>
-                                <input type="text" value="{{ old('nama_pedangan') }}" name="nama_pedagang"
+                                <input required type="text" value="{{ old('nama_pedangan') }}" name="nama_pedagang"
                                     class="form-control">
 
                                 @error('nama_pedagang')
@@ -174,7 +186,8 @@ Retribusi
 
                             <div class="form-group">
                                 <label for="">Alamat</label>
-                                <input type="text" value="{{ old('alamat') }}" name="alamat" class="form-control">
+                                <input required type="text" value="{{ old('alamat') }}" name="alamat"
+                                    class="form-control">
 
                                 @error('alamat')
                                 <span class="text-danger">{{ $message }}</span>
@@ -212,8 +225,8 @@ Retribusi
 
                             <div class="form-group">
                                 <label for="">Jumlah</label>
-                                <input type="number" value="{{ old('jumlah_pembayaran') }}" name="jumlah_pembayaran"
-                                    class="form-control">
+                                <input required type="number" value="{{ old('jumlah_pembayaran') }}"
+                                    name="jumlah_pembayaran" class="form-control">
 
                                 @error('jumlah_pembayaran')
                                 <span class="text-danger">{{ $message }}</span>
@@ -312,8 +325,9 @@ Retribusi
 
                             <div class="form-group">
                                 <label for="">Nama Pedagang</label>
-                                <input type="text" value="{{ old('nama_pedagang', $retribusi->nama_pedagang) }}"
-                                    name="nama_pedagang" class="form-control">
+                                <input required type="text"
+                                    value="{{ old('nama_pedagang', $retribusi->nama_pedagang) }}" name="nama_pedagang"
+                                    class="form-control">
                                 @error('nama_pedagang')
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror
@@ -321,8 +335,8 @@ Retribusi
 
                             <div class="form-group">
                                 <label for="">Alamat</label>
-                                <input type="text" value="{{ old('alamat', $retribusi->alamat) }}" name="alamat"
-                                    class="form-control">
+                                <input required type="text" value="{{ old('alamat', $retribusi->alamat) }}"
+                                    name="alamat" class="form-control">
                                 @error('alamat')
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror
@@ -359,7 +373,7 @@ Retribusi
 
                             <div class="form-group">
                                 <label for="">Jumlah</label>
-                                <input type="number"
+                                <input required type="number"
                                     value="{{ old('jumlah_pembayaran', $retribusi->jumlah_pembayaran) }}"
                                     name="jumlah_pembayaran" class="form-control">
                                 @error('jumlah_pembayaran')
@@ -462,7 +476,7 @@ Retribusi
                         <div class="form-group">
                             <label for="search-text">Pencarian:</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" name="search" value="{{ request('search') }}"
+                                <input required type="text" class="form-control" name="search" value="{{ request('search') }}"
                                     placeholder="Cari Nama Pedagang atau Alamat">
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-primary">Cari</button>
@@ -475,8 +489,7 @@ Retribusi
                         <div class="form-group">
                             <label for="search-date">Tanggal:</label>
                             <div class="input-group">
-                                <input type="date" class="form-control"
-                                    name="searchdate">
+                                <input required type="date" class="form-control" name="searchdate">
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-primary">Cari</button>
                                 </div>
@@ -511,8 +524,7 @@ Retribusi
                         <div class="form-group">
                             <label for="search-date">Tanggal:</label>
                             <div class="input-group">
-                                <input type="date" class="form-control"
-                                    name="date">
+                                <input required type="date" class="form-control" name="date">
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-success">Export</button>
                                 </div>
@@ -536,10 +548,8 @@ Retribusi
     integrity="sha256-tG5mcZUtJsZvyKAxYLVXrmjKBVLd6VpVccqz/r4ypFE=" crossorigin="anonymous"></script>
 
 <script>
-    $(document).ready(function () {
-        $('.js-example-basic-single').select2({
-            theme: "classic"
-        });
+    $(function () {
+        $('.alert').delay(2000).fadeOut();
     });
 
 </script>
