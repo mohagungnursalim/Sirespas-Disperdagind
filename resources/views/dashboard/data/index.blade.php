@@ -144,7 +144,8 @@ Retribusi
         <div class="modal-content">
             <div class="card  shadow mt-4">
                 <div class="modal-header">
-                    <h5 class="modal-title text-dark text-center" id="exampleModalLabel">INPUT DATA RETRIBUSI PASAR <kbd
+                    <h5 class="modal-title text-dark text-center" id="exampleModalLabel">INPUT DATA RETRIBUSI PASAR 
+                        @if (isset(Auth::user()->operator)) {{ Auth::user()->operator }} @endif <kbd
                             class="bg-primary"> @php echo date('Y') @endphp</kbd></h5>
 
                 </div>
