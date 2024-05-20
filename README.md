@@ -7,8 +7,8 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About GadeMart
+## About Sirespas
 
-GadeMart merupakan aplikasi yang dibuat untuk memantau perkembangan harga serta mencegah inflasi pada Pasar Tradisional oleh Dinas Perdagangan dan Perindustrian Kota Palu.
+Sirespas merupakan aplikasi yang dibuat untuk mendata retribusi yang masuk pada Pasar Tradisional oleh Dinas Perdagangan dan Perindustrian Kota Palu.
 
 
