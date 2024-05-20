@@ -18,18 +18,40 @@ class RetribusiController extends Controller
     public function index( Request $request)
     {
 
-        if (request('search')) {
-            $retribusis = Retribusi::where(function ($query) use ($request) {
-                $query->where('nama_pedagang', 'like', '%' . $request->search . '%')
-                      ->orWhere('alamat', 'like', '%' . $request->search . '%');})
-                      ->oldest()->cursorPaginate(10)->withQueryString();
-        } elseif (request('searchdate')) {
-            $retribusis = Retribusi::where('created_at', 'like', '%' . request('searchdate') . '%')
-                                   ->latest()->cursorPaginate(10)->withQueryString();
-        } else {
-            $retribusis = Retribusi::latest()->cursorPaginate(10); 
+        if (Auth::user()->is_admin == true) {
+            if (request('search')) {
+                $retribusis = Retribusi::where(function ($query) use ($request) {
+                    $query->where('nama_pedagang', 'like', '%' . $request->search . '%')
+                        ->orWhere('alamat', 'like', '%' . $request->search . '%');})
+                        ->oldest()->cursorPaginate(10)->withQueryString();
+            } elseif (request('searchdate')) {
+                $retribusis = Retribusi::where('created_at', 'like', '%' . request('searchdate') . '%')
+                                    ->latest()->cursorPaginate(10)->withQueryString();
+            } else {
+                $retribusis = Retribusi::latest()->cursorPaginate(10); 
+            }
+        }else {
+            if (request('search')) {
+                $retribusis = Retribusi::where(function ($query) {
+                    $query->where(function ($subquery) {
+                        $subquery->where('nama_pedagang', 'like', '%' . request('search') . '%')
+                                 ->orWhere('alamat', 'like', '%' . request('search') . '%');
+                    })->where(function ($subquery) {
+                        $subquery->where('pasar', Auth::user()->operator)
+                                 ->orWhere('pasar', 'like', '%' . request('search') . '%');
+                    });})->latest()->paginate(20);
+    
+            } elseif (request('searchdate')) {
+                 $retribusis = Retribusi::where(function ($query) {
+                    $query->where(function ($subquery) {
+                        $subquery->where('created_at', 'like', '%' . request('searchdate') . '%');
+                    })->where(function ($subquery) {
+                        $subquery->where('pasar', Auth::user()->operator);
+                    });})->latest()->paginate(20);
+            } else {
+                $retribusis = Retribusi::where('pasar', Auth::user()->operator)->latest()->cursorPaginate(10); 
+            }
         }
-        
 
        
         $pasars = Pasar::select('nama')->latest()->get();
