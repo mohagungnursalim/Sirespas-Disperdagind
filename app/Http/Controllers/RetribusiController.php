@@ -115,9 +115,33 @@ class RetribusiController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Retribusi $retribusi)
+    public function update(Request $request, $id)
     {
-        //
+        // Validasi data yang diterima dari request
+        $validatedData = $request->validate([
+            'pasar' => 'required|exists:pasars,nama',
+            'nama_pedagang' => 'required',
+            'alamat' => 'required',
+            'jenis_retribusi' => 'required|in:Parkir,Kebersihan,Izin Usaha,Pengelolaan Air,Penggunaan Jalan,Sampah,Keamanan,Perizinan Bangunan,Penggunaan Fasilitas Umum',
+            'jumlah_pembayaran' => 'required|numeric',
+            'metode_pembayaran' => 'required|in:Tunai,Transfer Bank,Kartu Kredit,Kartu Debit,E Wallet',
+            'keterangan' => 'required|in:Lunas,Belum Lunas',
+        ]);
+    
+        // Temukan data retribusi yang akan diupdate berdasarkan ID
+        $retribusi = Retribusi::findOrFail($id);
+    
+        // Update data retribusi dengan data yang tervalidasi
+        $retribusi->update($validatedData);
+    
+        // Update informasi petugas penerima jika diperlukan
+        $retribusi->petugas_penerima = Auth::user()->name;
+        
+        // Simpan perubahan data retribusi ke dalam database
+        $retribusi->save();
+    
+        // Redirect ke halaman yang sesuai atau tampilkan pesan sukses
+        return redirect('dashboard/retribusi')->with('success', 'Data retribusi berhasil diperbarui.');
     }
 
     /**
