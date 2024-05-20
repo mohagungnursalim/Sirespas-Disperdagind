@@ -6,6 +6,7 @@ use App\Models\Pasar;
 use App\Models\Retribusi;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -13,7 +14,12 @@ class DashboardController extends Controller
     public function index()
     {
 
-        $totalretribusi = Retribusi::count();
+        if (Auth::user()->is_admin == true) {
+            $totalretribusi = Retribusi::count();
+        }else {
+            $totalretribusi = Retribusi::where('petugas_penerima',Auth::user()->name)->count();
+        }
+
         $totaluser = User::count();
         $totalpasar = Pasar::count();
 
