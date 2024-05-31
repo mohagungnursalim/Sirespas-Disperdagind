@@ -16,4 +16,9 @@ class Retribusi extends Model
     {
       return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function pasars()
+    {
+      return $this->belongsTo(User::class, 'pasar_id');
+    }
 }
