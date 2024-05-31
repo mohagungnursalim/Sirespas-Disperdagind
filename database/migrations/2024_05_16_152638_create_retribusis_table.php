@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('retribusis', function (Blueprint $table) {
             $table->id();
-            $table->string('pasar');
+            $table->foreignId('pasar_id');
+            $table->foreignId('user_id');
             $table->string('nama_pedagang');
             $table->string('alamat');
             $table->string('jenis_retribusi');
@@ -21,7 +22,6 @@ return new class extends Migration
             $table->string('metode_pembayaran');
             $table->int('no_pembayaran');
             $table->text('keterangan')->nullable();
-            $table->string('petugas_penerima');
             $table->timestamps();
         });
     }
