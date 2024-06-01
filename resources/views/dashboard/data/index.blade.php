@@ -92,7 +92,7 @@ Retribusi
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ Carbon\Carbon::parse($retribusi->created_at)->format('d/m/Y') }}</td>
-                                    <td>{{ $retribusi->pasar }}</td>
+                                    <td>{{ optional($retribusi->pasar)->nama }}</td>
                                     <td>{{ $retribusi->nama_pedagang }}</td>
                                     <td>{{ $retribusi->alamat }}</td>
                                     <td>{{ $retribusi->jenis_retribusi }}</td>
@@ -100,7 +100,7 @@ Retribusi
                                     <td>{{ $retribusi->metode_pembayaran }}</td>
                                     <td>{{ $retribusi->no_pembayaran }}</td>
                                     <td>{{ $retribusi->keterangan }}</td>
-                                    <td>{{ $retribusi->petugas_penerima }}</td>
+                                    <td>{{ optional($retribusi->user)->name }}</td>
 
 
                                     @if (auth()->user()->operator == 'hanyalihat')
@@ -154,30 +154,30 @@ Retribusi
 
                         <form method="post" action="{{ route('retribusi.store') }}" class="text-dark">
                             @csrf
+                            
                             @if (Auth::user()->is_admin == true)
                             <div class="form-group">
                                 <label for="exampleFormControlSelect1">Pasar</label>
-                                <select required class="form-control" name="pasar">
+                                <select required class="form-control" name="pasar_id">
                                     <option value="">-Pilih pasar-</option>
                                     @foreach ($pasars as $pasar)
-                                    <option value="{{ $pasar->nama }}" @selected(old('pasar')==$pasar->nama)>
+                                    <option value="{{ $pasar->id }}" @selected(old('pasar_id')==$pasar->id)>
                                         {{ $pasar->nama }}
                                     </option>
                                     @endforeach
                                 </select>
 
-                                @error('pasar')
+                                @error('pasar_id')
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
-
                             @else
-                            <input type="hidden" name="pasar" id="" value="{{ Auth::user()->operator }}">
+                            <input type="hidden" name="pasar_id" id="" value="{{ Auth::user()->pasar_id }}">
                             @endif
-
+                            <input type="hidden" name="user_id" id="" value="{{ Auth::user()->id }}">
                             <div class="form-group">
                                 <label for="">Nama Pedagang</label>
-                                <input required type="text" value="{{ old('nama_pedangan') }}" name="nama_pedagang"
+                                <input required type="text" value="{{ old('nama_pedagang') }}" name="nama_pedagang"
                                     class="form-control">
 
                                 @error('nama_pedagang')
@@ -305,25 +305,25 @@ Retribusi
                             @csrf
                             @method('put')
 
-                            @if (Auth::user()->is_admin == true)
+                            @if (Auth::user()->is_admin == true)             
                             <div class="form-group">
                                 <label for="exampleFormControlSelect1">Pasar</label>
-                                <select required class="form-control" name="pasar">
-                                    <option>-Pilih pasar-</option>
-                                    @foreach ($pasars as $pasar )
-                                    <option value="{{ $pasar->nama }}" @selected($retribusi->pasar == $pasar->nama)>
+                                <select required class="form-control" name="pasar_id">
+                                    <option value="">-Pilih pasar-</option>
+                                    @foreach ($pasars as $pasar)
+                                    <option value="{{ $pasar->id }}" @selected($retribusi->pasar_id == $pasar->id)>
                                         {{ $pasar->nama }}
                                     </option>
                                     @endforeach
                                 </select>
-                                @error('pasar')
+                                @error('pasar_id')
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                             @else
-                            <input type="hidden" name="pasar" id="" value="{{ Auth::user()->operator }}">
+                            <input type="hidden" name="pasar_id" id="" value="{{ Auth::user()->pasar_id }}">
                             @endif
-
+                            <input type="hidden" name="user_id" id="" value="{{ Auth::user()->id }}">
                             <div class="form-group">
                                 <label for="">Nama Pedagang</label>
                                 <input required type="text"

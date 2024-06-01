@@ -48,9 +48,9 @@ class User extends Authenticatable
     ];
 
 
-    public function pangan()
+    public function pasar()
     {
-        return $this->hasMany(Pangan::class);
+        return $this->belongsTo(Pasar::class,'pasar_id');
     }
 
     
