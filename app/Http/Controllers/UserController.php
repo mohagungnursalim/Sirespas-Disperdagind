@@ -14,28 +14,27 @@ class UserController extends Controller
      */
     public function index()
     {
-
         $loggedInUser = auth()->user();
-
-        // menampilkan semua user,selain user yang login
-        $user = User::where('id', '!=', $loggedInUser->id)->latest()->paginate(10);
-
+    
+        // Menampilkan semua pengguna selain pengguna yang sedang login
+        $usersQuery = User::where('id', '!=', $loggedInUser->id);
+    
+        // Jika ada pencarian
         if (request('search')) {
-            $user = User::where(function($query) {
-                            $query->where('name', 'like', '%' . request('search') . '%')
-                                  ->orWhere('email', 'like', '%' . request('search') . '%');
-                        })
-                        ->where('id', '!=', $loggedInUser->id)
-                        ->latest()
-                        ->paginate(5);
+            $search = '%' . request('search') . '%';
+            $usersQuery->where(function($query) use ($search) {
+                $query->where('name', 'like', $search)
+                      ->orWhere('email', 'like', $search);
+            });
         }
-        
-
-        return view('dashboard.akun.index',[
-            'pasars' => Pasar::all(),
-            'users' => $user
-            
-        ]);
+    
+        // Ambil data pengguna dengan relasi pasar, dan batasi 10 hasil per halaman
+        $users = $usersQuery->with('pasar')->latest()->paginate(10);
+    
+        // Ambil daftar pasar
+        $pasars = Pasar::select('id','nama')->latest()->get();
+    
+        return view('dashboard.akun.index', compact('users', 'pasars'));
     }
 
     /**
@@ -54,15 +53,14 @@ class UserController extends Controller
         $request->validate([
             'email' => 'required|email', 
             'name'   => 'required',
-            'operator' => 'required',
+            'pasar_id' => 'required|exists:pasars,id',
             'is_admin' => 'required|in:"0","1"'  
         ]);
 
-        
         User::create([
             'email' => $request->input('email'),
             'name' => $request->input('name'),
-            'operator' => $request->input('operator'),
+            'pasar_id' => $request->input('pasar_id'),
             'is_admin' => $request->input('is_admin'),
             'password' => Hash::make('12345678')
             

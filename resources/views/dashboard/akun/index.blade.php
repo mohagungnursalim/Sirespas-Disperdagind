@@ -37,12 +37,10 @@ Kelola Akun
                         placeholder="Nama..">
                 </div>
                 <div class="form-group mx-sm-3 mb-2">
-                    <select id="inputState" required name="operator" class="form-control">
+                    <select id="inputState" required name="pasar_id" class="form-control">
                         <option selected>-Operator-</option>
-
-                        <option value="hanyalihat" class="text-success">Hanya Lihat</option>
                         @foreach ($pasars as $pasar )
-                        <option>{{ $pasar->nama }}</option>
+                        <option value="{{ $pasar->id }}">{{ $pasar->nama }}</option>
                         @endforeach
                         <div class="dropdown-divider"></div>
                     </select>
@@ -50,7 +48,7 @@ Kelola Akun
                 </div>
                 <div class="form-group mx-sm-3 mb-2">
                     <select id="inputState" required name="is_admin" class="form-control">
-                        <option selected>-Role-</option>
+                        <option selected>-Akses-</option>
 
                         <option value="1" class="text-primary">Admin</option>
                         <option value="0" class="text-danger">Operator Pasar</option>
@@ -87,7 +85,7 @@ Kelola Akun
                         <th>Email</th>
                         <th>Nama User</th>
                         <th>Operator</th>
-                        <th>Role</th>
+                        <th>Akses</th>
                         <th>Dibuat</th>
                         <th>Aksi</th>
 
@@ -100,34 +98,23 @@ Kelola Akun
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->name }}</td>
                         <td>
-                            @if ($user->operator == 'hanyalihat')
-                            <kbd class="bg-secondary">{{ $user->operator }}</kbd>
-                            @else
-                            {{ $user->operator }}
-                            @endif
+                            <kbd class="bg-secondary">{{ $user->pasar->nama }}</kbd>
                         </td>
                         <td>
                             @if ($user->is_admin == true)
                             <kbd class="bg-primary">Admin</kbd>
                             @elseif ($user->is_admin == false)
-                            <kbd class="bg-success">Operator</kbd>
+                            <kbd class="bg-success">Operator Pasar</kbd>
                             @endif
 
                         </td>
                         <td>{{ Carbon\Carbon::parse($user->created_at)->format('d-m,Y') }}</td>
 
                         <td>
-                            {{-- <button type="button" class="btn btn-warning" data-toggle="modal"
-                                data-target="#exampleModal{{ $user->id }}">
-                                <i class="fas fa-fw fa-edit"></i>
-                            </button> --}}
                             <button type="button" class="btn btn-danger" data-toggle="modal"
                             data-target="#exampleModaldelete{{ $user->id }}">
                             <i class="fas fa-fw fa-trash"></i>
                             </button>
-                            {{-- <a href="/dashboard/komoditas/{{ $k->id }}/edit" class="btn btn-warning"><i
-                                class="fas fa-fw fa-edit"></i></a>
-                            --}}
                         </td>
                     </tr>
                     @endforeach

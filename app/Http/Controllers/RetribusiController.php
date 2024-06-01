@@ -37,8 +37,8 @@ class RetribusiController extends Controller
                         $subquery->where('nama_pedagang', 'like', '%' . request('search') . '%')
                                  ->orWhere('alamat', 'like', '%' . request('search') . '%');
                     })->where(function ($subquery) {
-                        $subquery->where('pasar', Auth::user()->operator)
-                                 ->orWhere('pasar', 'like', '%' . request('search') . '%');
+                        $subquery->where('pasar_id', Auth::user()->pasar_id)
+                                 ->orWhere('pasar_id', 'like', '%' . request('search') . '%');
                     });})->latest()->paginate(20);
     
             } elseif (request('searchdate')) {
@@ -46,10 +46,10 @@ class RetribusiController extends Controller
                     $query->where(function ($subquery) {
                         $subquery->where('created_at', 'like', '%' . request('searchdate') . '%');
                     })->where(function ($subquery) {
-                        $subquery->where('pasar', Auth::user()->operator);
+                        $subquery->where('pasar_id', Auth::user()->pasar_id);
                     });})->latest()->paginate(20);
             } else {
-                $retribusis = Retribusi::where('pasar', Auth::user()->operator)->latest()->cursorPaginate(10); 
+                $retribusis = Retribusi::where('pasar_id', Auth::user()->pasar_id)->latest()->cursorPaginate(10); 
             }
         }
 
