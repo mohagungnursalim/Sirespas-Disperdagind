@@ -13,30 +13,28 @@ class DashboardController extends Controller
 {
     public function index()
     {
-
-        if (Auth::user()->is_admin == true) {
+        if (Auth::user()->is_admin) {
             $totalretribusi = Retribusi::count();
-        }else {
-            $totalretribusi = Retribusi::where('petugas_penerima',Auth::user()->name)->count();
+        } else {
+            $totalretribusi = Retribusi::where('user_id', Auth::user()->id)->count();
         }
 
         $totaluser = User::count();
         $totalpasar = Pasar::count();
 
-        $highestPayments = Retribusi::select('pasar', DB::raw('SUM(jumlah_pembayaran) as max_pembayaran'))
-        ->groupBy('pasar')
-        ->get();
-    
+        $highestPayments = Retribusi::select('pasar_id', DB::raw('SUM(jumlah_pembayaran) as max_pembayaran'))
+            ->groupBy('pasar_id')
+            ->with('pasar') // Load pasar terkait
+            ->get();
+
         $chartData = [
             ['Pasar', 'Jumlah Pembayaran']
         ];
 
         foreach ($highestPayments as $payment) {
-            $chartData[] = [$payment->pasar, (float)$payment->max_pembayaran];
+            $chartData[] = [$payment->pasar->nama, (float)$payment->max_pembayaran];
         }
 
-        return view('dashboard.dashboard',compact('chartData','totalretribusi','totaluser','totalpasar'));
+        return view('dashboard.dashboard', compact('chartData', 'totalretribusi', 'totaluser', 'totalpasar'));
     }
-
-    
 }
