@@ -166,7 +166,7 @@ class RetribusiController extends Controller
             $retribusi = Retribusi::whereDate('created_at', $date)->latest()->get();
             return Excel::download(new RetribusiExport($retribusi, $date), 'Retribusi_Pedagang-Admin.xlsx');
         } else {
-            $retribusi = Retribusi::where('pasar', Auth::user()->operator)
+            $retribusi = Retribusi::where('pasar_id', Auth::user()->pasar_id)
                                 ->whereDate('created_at', $date)
                                 ->latest()->get();
             return Excel::download(new RetribusiExport($retribusi, $date), 'Retribusi_Pedagang-Operator.xlsx');

@@ -36,7 +36,7 @@ class RetribusiExport implements FromQuery, WithMapping, ShouldAutoSize, WithHea
                           ->orderBy('created_at', 'desc');
 
         if (!auth()->user()->is_admin) {
-            $query->where('pasar', auth()->user()->operator);
+            $query->where('pasar_id', auth()->user()->pasar_id);
         }
 
         return $query;
@@ -63,7 +63,7 @@ class RetribusiExport implements FromQuery, WithMapping, ShouldAutoSize, WithHea
 
         return [
             Carbon::parse($retribusi->created_at)->format('d/M/Y'),
-            $retribusi->pasar,
+            $retribusi->pasar->nama,
             $retribusi->nama_pedagang,
             $retribusi->alamat,
             $retribusi->jenis_retribusi,
@@ -71,7 +71,7 @@ class RetribusiExport implements FromQuery, WithMapping, ShouldAutoSize, WithHea
             $retribusi->metode_pembayaran,
             $retribusi->no_pembayaran,
             $retribusi->keterangan,
-            $retribusi->petugas_penerima
+            $retribusi->user->name
             
         ];
     }
