@@ -12,6 +12,9 @@ class Pasar extends Model
     protected $table = 'pasars';
     protected $guarded = ['id'];
 
-
+    public function retribusi()
+    {
+        return $this->belongsTo(Retribusi::class, 'retribusi_id');
+    }
     
 }

@@ -28,7 +28,7 @@ class RetribusiController extends Controller
                 $retribusis = Retribusi::where('created_at', 'like', '%' . request('searchdate') . '%')
                                     ->latest()->cursorPaginate(10)->withQueryString();
             } else {
-                $retribusis = Retribusi::latest()->cursorPaginate(10); 
+                $retribusis = Retribusi::with('pasar')->latest()->cursorPaginate(10); 
             }
         }else {
             if (request('search')) {
@@ -54,7 +54,7 @@ class RetribusiController extends Controller
         }
 
        
-        $pasars = Pasar::select('nama')->latest()->get();
+        $pasars = Pasar::select('nama','id')->latest()->get();
         return view('dashboard.data.index',compact('retribusis','pasars'));
     }
 
@@ -73,7 +73,7 @@ class RetribusiController extends Controller
     {
         
         $validatedData = $request->validate([
-            'pasar' => 'required|exists:pasars,nama',
+            'pasar_id' => 'required|exists:pasars,id',
             'nama_pedagang' => 'required',
             'alamat' => 'required',
             'jenis_retribusi' => 'required|in:Parkir,Kebersihan,Izin Usaha,Pengelolaan Air,Penggunaan Jalan,Sampah,Keamanan,Perizinan Bangunan,Penggunaan Fasilitas Umum',
@@ -88,7 +88,7 @@ class RetribusiController extends Controller
         // Simpan data retribusi ke dalam database
         $retribusi = new Retribusi($validatedData);
         $retribusi->no_pembayaran = $no_pembayaran;
-        $retribusi->petugas_penerima = Auth::user()->name; // Petugas penerima retribusi diambil dari user yang login
+        $retribusi->user_id = Auth::user()->id; // Petugas penerima retribusi diambil dari user yang login
         $retribusi->save();
 
         // Redirect ke halaman yang sesuai atau tampilkan pesan sukses
@@ -119,7 +119,7 @@ class RetribusiController extends Controller
     {
         // Validasi data yang diterima dari request
         $validatedData = $request->validate([
-            'pasar' => 'required|exists:pasars,nama',
+            'pasar_id' => 'required|exists:pasars,id',
             'nama_pedagang' => 'required',
             'alamat' => 'required',
             'jenis_retribusi' => 'required|in:Parkir,Kebersihan,Izin Usaha,Pengelolaan Air,Penggunaan Jalan,Sampah,Keamanan,Perizinan Bangunan,Penggunaan Fasilitas Umum',
@@ -135,7 +135,7 @@ class RetribusiController extends Controller
         $retribusi->update($validatedData);
     
         // Update informasi petugas penerima jika diperlukan
-        $retribusi->petugas_penerima = Auth::user()->name;
+        $retribusi->user_id = Auth::user()->id;
         
         // Simpan perubahan data retribusi ke dalam database
         $retribusi->save();

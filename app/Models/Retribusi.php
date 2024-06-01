@@ -12,13 +12,13 @@ class Retribusi extends Model
     protected $guarded = ['id'];
 
 
-    public function users()
+    public function user()
     {
       return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function pasars()
+    public function pasar()
     {
-      return $this->belongsTo(User::class, 'pasar_id');
+        return $this->belongsTo(Pasar::class, 'pasar_id');
     }
 }
