@@ -83,7 +83,7 @@ class RetribusiController extends Controller
         ]);
         
          // Generate nomor pembayaran (INVtanggalbulantahunnourut)
-        $no_pembayaran = 'INV' . date('Ymd') . Auth::user()->id . Retribusi::max('id');;
+        $no_pembayaran = 'INV' . date('dmy') . Auth::user()->id . Retribusi::max('id');;
 
         // Simpan data retribusi ke dalam database
         $retribusi = new Retribusi($validatedData);
