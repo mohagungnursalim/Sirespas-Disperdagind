@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('jenis_retribusi');
             $table->decimal('jumlah_pembayaran');
             $table->string('metode_pembayaran');
+            $table->string('gambar');
             $table->string('no_pembayaran');
             $table->text('keterangan')->nullable();
             $table->timestamps();
