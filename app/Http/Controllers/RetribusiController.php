@@ -8,6 +8,8 @@ use App\Models\Retribusi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
 class RetribusiController extends Controller
@@ -75,6 +77,7 @@ class RetribusiController extends Controller
         $validatedData = $request->validate([
             'pasar_id' => 'required|exists:pasars,id',
             'nama_pedagang' => 'required',
+            'gambar' => 'nullable|max:4000',
             'alamat' => 'required',
             'jenis_retribusi' => 'required|in:Parkir,Kebersihan,Izin Usaha,Pengelolaan Air,Penggunaan Jalan,Sampah,Keamanan,Perizinan Bangunan,Penggunaan Fasilitas Umum',
             'jumlah_pembayaran' => 'required|numeric',
@@ -82,6 +85,11 @@ class RetribusiController extends Controller
             'keterangan' => 'required|in:Lunas,Belum Lunas',
         ]);
         
+        if($request->file('gambar')){
+            $validatedData['gambar'] = $request->file('gambar')->store('bukti-pembayaran','public');
+        }
+
+
          // Generate nomor pembayaran (INVtanggalbulantahunnourut)
         $no_pembayaran = 'INV' . date('dmy') . Auth::user()->id . Retribusi::max('id');;
 
@@ -117,46 +125,56 @@ class RetribusiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validasi data yang diterima dari request
+        $retribusi = Retribusi::find($id);
         $validatedData = $request->validate([
             'pasar_id' => 'required|exists:pasars,id',
             'nama_pedagang' => 'required',
+            'gambar' => 'nullable|max:4000', 
             'alamat' => 'required',
             'jenis_retribusi' => 'required|in:Parkir,Kebersihan,Izin Usaha,Pengelolaan Air,Penggunaan Jalan,Sampah,Keamanan,Perizinan Bangunan,Penggunaan Fasilitas Umum',
             'jumlah_pembayaran' => 'required|numeric',
             'metode_pembayaran' => 'required|in:Tunai,Transfer Bank,Kartu Kredit,Kartu Debit,E Wallet',
             'keterangan' => 'required|in:Lunas,Belum Lunas',
         ]);
+
+       
+        if ($request->file('gambar')) {
+            // Hapus gambar lama jika ada
+            if ($retribusi->gambar) {
+                Storage::disk('public')->delete($retribusi->gambar);
+            }
+            // Simpan gambar baru
+            $validatedData['gambar'] = $request->file('gambar')->store('bukti-pembayaran', 'public');
     
-        // Temukan data retribusi yang akan diupdate berdasarkan ID
-        $retribusi = Retribusi::findOrFail($id);
-    
-        // Update data retribusi dengan data yang tervalidasi
+        }
+
+        // Update data retribusi
         $retribusi->update($validatedData);
-    
-        // Update informasi petugas penerima jika diperlukan
-        $retribusi->user_id = Auth::user()->id;
-        
-        // Simpan perubahan data retribusi ke dalam database
-        $retribusi->save();
+
     
         // Redirect ke halaman yang sesuai atau tampilkan pesan sukses
         return redirect('dashboard/retribusi')->with('success', 'Data retribusi berhasil diperbarui.');
     }
+    
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
     {
-
-        $retribusi = Retribusi::find($id);
-
-        
+        $retribusi = Retribusi::findOrFail($id);
+    
+        // Hapus gambar dari storage jika ada
+        if ($retribusi->gambar) {
+            Storage::disk('public')->delete($retribusi->gambar);
+        }
+    
+        // Hapus data retribusi dari database
         $retribusi->delete();
-
+    
         return redirect('dashboard/retribusi')->with('success', 'Data retribusi berhasil dihapus.');
     }
+
 
     public function export(Request $request, Retribusi $retribusi)
     {

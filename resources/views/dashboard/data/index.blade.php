@@ -77,6 +77,7 @@ Retribusi
                                     <th>Alamat</th>
                                     <th>Jenis Retribusi</th>
                                     <th>Jumlah</th>
+                                    <th>Bukti Bayar</th>
                                     <th>Metode Pembayaran</th>
                                     <th>No Pembayaran</th>
                                     <th>Keterangan</th>
@@ -91,12 +92,19 @@ Retribusi
                                 @foreach ($retribusis as $retribusi )
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ Carbon\Carbon::parse($retribusi->created_at)->format('d/m/Y') }}</td>
+                                    <td>{{ $retribusi->created_at->format('d/m/Y') }}</td>
                                     <td>{{ optional($retribusi->pasar)->nama }}</td>
                                     <td>{{ $retribusi->nama_pedagang }}</td>
                                     <td>{{ $retribusi->alamat }}</td>
                                     <td>{{ $retribusi->jenis_retribusi }}</td>
                                     <td>Rp{{ number_format($retribusi->jumlah_pembayaran) }}</td>
+                                    <td>
+                                        @if($retribusi->gambar)
+                                            <img class="img-thumbnail" src="{{ asset('storage/' . $retribusi->gambar) }}" data-toggle="modal" data-target="#buktiModal{{ $retribusi->id }}" alt="Bukti Pembayaran" width="40px">
+                                        @else
+                                        -
+                                        @endif
+                                    </td>
                                     <td>{{ $retribusi->metode_pembayaran }}</td>
                                     <td>{{ $retribusi->no_pembayaran }}</td>
                                     <td>{{ $retribusi->keterangan }}</td>
@@ -152,7 +160,7 @@ Retribusi
                 <div class="container">
                     <div class="card-body">
 
-                        <form method="post" action="{{ route('retribusi.store') }}" class="text-dark">
+                        <form method="post" action="{{ route('retribusi.store') }}" enctype="multipart/form-data" class="text-dark">
                             @csrf
                             
                             @if (Auth::user()->is_admin == true)
@@ -235,6 +243,15 @@ Retribusi
                             </div>
 
                             <div class="form-group">
+                                <label for="bukti_pembayaran">Bukti Pembayaran</label>
+                                <img  class="img-preview img-fluid mb-3 col-sm-5" width="140px">
+                                <input  onchange="previewImage()" id="image" type="file" value="{{ old('gambar') }}" name="gambar" class="form-control">
+                                @error('gambar')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
                                 <label for="metode_pembayaran">Metode Pembayaran</label>
                                 <select required class="form-control" name="metode_pembayaran" id="metode_pembayaran">
                                     <option>-Pilih metode pembayaran-</option>
@@ -300,7 +317,7 @@ Retribusi
                 </div>
                 <div class="container">
                     <div class="card-body">
-                        <form method="post" action="{{ route('retribusi.update', $retribusi->id) }}" class="text-dark">
+                        <form method="post" action="{{ route('retribusi.update', $retribusi->id) }}" enctype="multipart/form-data" class="text-dark">
 
                             @csrf
                             @method('put')
@@ -381,6 +398,20 @@ Retribusi
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
+
+                            <div class="form-group">
+                                <label for="editimage">Bukti Pembayaran</label>
+                                @if($retribusi->gambar)
+                                    <img src="{{ asset('storage/' . $retribusi->gambar) }}" class="img-preview img-fluid mb-3 col-sm-5 d-block edit-preview">
+                                @else
+                                    <img src="#" class="img-preview img-fluid mb-3 col-sm-5 d-none edit-preview">
+                                @endif
+                                <input onchange="editImage(event)" type="file" class="form-control editimage" name="gambar" accept="image/*">
+                                @error('gambar')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            
 
                             <div class="form-group">
                                 <label for="metode_pembayaran">Metode Pembayaran</label>
@@ -542,12 +573,78 @@ Retribusi
         </div>
     </div>
 </div>
-{{-- show/hide input field modal input --}}
+
+<!-- Modal View Bukti Pembayaran -->
+@foreach ($retribusis as $retribusi)
+<div class="modal" id="buktiModal{{ $retribusi->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Bukti Pembayaran <b class="text-dark">{{ $retribusi->nama_pedagang }}</b> <kbd>{{  $retribusi->created_at->format('d/m/Y') }}</kbd> </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="text-center">
+                <img class="img-thumbnail img-fluid mb-3 col-sm-5" src="{{ asset('storage/' . $retribusi->gambar) }}" width="140px">
+            </div>
+        </div>
+        <div class="text-center mb-3">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+@endforeach
 
 {{-- jquery --}}
 <script src="https://code.jquery.com/jquery-3.7.0.slim.min.js"
     integrity="sha256-tG5mcZUtJsZvyKAxYLVXrmjKBVLd6VpVccqz/r4ypFE=" crossorigin="anonymous"></script>
 
+{{-- input image preview --}}
+<script>
+    function previewImage() {
+
+        const image = document.querySelector('#image');
+        const imgPreview = document.querySelector('.img-preview');
+
+        imgPreview.style.display = 'block';
+
+        const oFReader = new FileReader();
+
+        oFReader.readAsDataURL(image.files[0]);
+
+        oFReader.onload = function (oFREvent) {
+
+            imgPreview.src = oFREvent.target.result;
+
+        }
+    }
+
+</script>
+
+{{-- edit image preview --}}
+<script>
+    function editImage(event) {
+        const image = event.target.files[0];
+        const previewContainer = event.target.closest('.form-group');
+        const editPreview = previewContainer.querySelector('.edit-preview');
+
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            editPreview.src = e.target.result;
+            editPreview.classList.remove('d-none');
+        }
+
+        if (image) {
+            reader.readAsDataURL(image);
+        }
+    }
+</script>
+
+{{-- Alert --}}
 <script>
     $(function () {
         $('.alert').delay(2000).fadeOut();
