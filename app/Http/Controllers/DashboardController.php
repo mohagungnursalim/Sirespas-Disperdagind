@@ -28,7 +28,7 @@ class DashboardController extends Controller
             ->get();
 
         $chartData = [
-            ['Pasar', 'Jumlah Pembayaran']
+            ['Pasar', 'Jumlah Pembayaran (Rp)']
         ];
 
         foreach ($highestPayments as $payment) {
