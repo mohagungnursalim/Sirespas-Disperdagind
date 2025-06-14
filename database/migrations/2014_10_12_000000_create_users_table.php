@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pasar_id');
+            $table->foreignId('pasar_id')->nullable();
             $table->string('name');
             $table->boolean('is_admin')->nullable();
             $table->string('operator')->nullable();

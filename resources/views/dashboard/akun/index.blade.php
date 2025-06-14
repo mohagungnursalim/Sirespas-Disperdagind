@@ -98,7 +98,7 @@ Kelola Akun
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->name }}</td>
                         <td>
-                            <kbd class="bg-secondary">{{ $user->pasar->nama }}</kbd>
+                            <kbd class="bg-secondary">{{ optional($user->pasar)->nama ?? 'Pasar not assigned' }}</kbd>
                         </td>
                         <td>
                             @if ($user->is_admin == true)
